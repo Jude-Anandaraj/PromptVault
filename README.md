@@ -24,7 +24,8 @@ PromptVault/
 │   ├── controllers/        request handlers
 │   ├── middleware/         authentication and error handling
 │   ├── models/             Mongoose schemas: User, Prompt, Category
-│   └── routes/             URL-to-controller mapping
+│   ├── routes/             URL-to-controller mapping
+│   └── utils/              shared helpers, e.g. login tokens
 ├── docs/                   project documents and evidence
 ├── postman/                Postman collection for API tests
 ├── .gitignore
@@ -56,7 +57,11 @@ cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env
 npm run dev
 ```
 
-In `server/.env`, set `MONGODB_URI` to your MongoDB connection string. This file is never committed.
+In `server/.env`, set:
+- `MONGODB_URI` to your MongoDB connection string
+- `JWT_SECRET` to a random string of at least 32 characters. `.env.example` shows a command that generates one.
+
+This file is never committed.
 
 Open http://localhost:3000/api/health to check that the API is running. It should return:
 

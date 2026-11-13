@@ -34,3 +34,27 @@ export function validateRegister(req, res, next) {
   }
   next();
 }
+
+// Checks that the login data is present and is plain text.
+// Rejecting non-text values also blocks query tricks such as { "$ne": null }.
+export function validateLogin(req, res, next) {
+  const { email, password } = req.body ?? {};
+  const errors = {};
+
+  if (isBlank(email)) {
+    errors.email = 'Email is required.';
+  } else if (typeof email !== 'string') {
+    errors.email = 'Enter a valid email address.';
+  }
+
+  if (isBlank(password)) {
+    errors.password = 'Password is required.';
+  } else if (typeof password !== 'string') {
+    errors.password = 'Password must be text.';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ error: 'Validation failed.', details: errors });
+  }
+  next();
+}
