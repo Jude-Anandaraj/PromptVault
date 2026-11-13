@@ -19,7 +19,7 @@ PromptVault/
 │       ├── context/        shared login state
 │       ├── pages/          one file per screen: Explore, Login, Register, …
 │       └── services/       calls to the Express API
-├── server/                 Node.js + Express REST API
+├── server/                 Node.js + Express REST API (MVC)
 │   ├── config/             MongoDB connection
 │   ├── controllers/        request handlers
 │   ├── middleware/         authentication and error handling
@@ -38,7 +38,7 @@ PromptVault/
 
 | Tool | Version | Purpose |
 |---|---|---|
-| Node.js | 20 LTS or newer (includes npm) | runs the server and the React dev server |
+| Node.js | 22 LTS or newer (includes npm) | runs the server and the React dev server |
 | Git | any recent version | version control |
 | MongoDB | local Community Server or a MongoDB Atlas cluster | database |
 | Postman | any version | API testing |
@@ -56,7 +56,13 @@ cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env
 npm run dev
 ```
 
-Add your own MongoDB connection string and JWT secret to `server/.env`. This file is never committed.
+In `server/.env`, set `MONGODB_URI` to your MongoDB connection string. This file is never committed.
+
+Open http://localhost:3000/api/health to check that the API is running. It should return:
+
+```json
+{ "status": "ok", "database": "connected" }
+```
 
 **React app: http://localhost:5173**
 
@@ -77,6 +83,7 @@ npm run dev
 ## Contributing
 
 - `main` contains only working, reviewed code. Do not push to it directly.
+- Every team member commits their own work from their own GitHub account.
 - Do your work on a feature branch: `feature/auth`, `feature/frontend` or `feature/prompts`. Before you start, update your branch from `main`:
   ```bash
   git checkout main

@@ -1,0 +1,29 @@
+import express from 'express';
+import cors from 'cors';
+import { isDBConnected } from './config/database.js';
+import { notFound, errorHandler } from './middleware/errorHandler.js';
+
+const app = express();
+
+// Allow the React app to call this API from the browser.
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173' }));
+
+// Read JSON request bodies into req.body.
+app.use(express.json());
+
+// Health check: confirms the API is running and the database is connected.
+app.get('/api/health', (req, res) => {
+  const connected = isDBConnected();
+  res.status(connected ? 200 : 503).json({
+    status: connected ? 'ok' : 'error',
+    database: connected ? 'connected' : 'disconnected'
+  });
+});
+
+// Feature routes are mounted here, e.g. app.use('/api/auth', authRoutes);
+
+// These two must stay last.
+app.use(notFound);
+app.use(errorHandler);
+
+export default app;
