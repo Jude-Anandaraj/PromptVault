@@ -14,6 +14,21 @@ export function errorHandler(err, req, res, next) {
     return res.status(400).json({ error: 'Request body is not valid JSON.' });
   }
 
+  // A Mongoose schema rule failed (required, minlength, match, …).
+  if (err.name === 'ValidationError') {
+    const details = {};
+    for (const [field, fieldError] of Object.entries(err.errors)) {
+      details[field] = fieldError.message;
+    }
+    return res.status(400).json({ error: 'Validation failed.', details });
+  }
+
+  // A unique field already has this value, e.g. two users with the same email.
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue ?? {})[0] ?? 'value';
+    return res.status(409).json({ error: `This ${field} is already in use.` });
+  }
+
   const status = err.status || err.statusCode || 500;
 
   // Server errors are logged in full but never shown to the client.
