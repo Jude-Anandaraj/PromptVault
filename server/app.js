@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { isDBConnected } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -23,6 +24,7 @@ app.get('/api/health', (req, res) => {
 
 // Feature routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // These two must stay last.
 app.use(notFound);

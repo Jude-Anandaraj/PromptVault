@@ -1,8 +1,16 @@
 import './config/env.js';
 import app from './app.js';
 import { connectDB } from './config/database.js';
+import { checkTokenSettings } from './utils/token.js';
 
 const PORT = process.env.PORT || 3000;
+
+try {
+  checkTokenSettings();
+} catch (err) {
+  console.error(`Could not start: ${err.message}`);
+  process.exit(1);
+}
 
 try {
   await connectDB();
