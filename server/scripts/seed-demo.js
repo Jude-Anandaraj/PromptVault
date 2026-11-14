@@ -17,9 +17,11 @@ if (!password || password.length < 8 || Buffer.byteLength(password) > 72) {
 }
 
 const USERS = [
-  { name: 'Alex Chen', email: 'alex.demo@example.com' },
-  { name: 'Priya Nair', email: 'priya.demo@example.com' },
-  { name: 'Sam Taylor', email: 'sam.demo@example.com' }
+  { name: 'Alex Chen', email: 'alex.demo@example.com', role: 'member' },
+  { name: 'Priya Nair', email: 'priya.demo@example.com', role: 'member' },
+  { name: 'Sam Taylor', email: 'sam.demo@example.com', role: 'member' },
+  // Can edit or delete any prompt and manage the categories.
+  { name: 'Admin Demo', email: 'admin.demo@example.com', role: 'admin' }
 ];
 
 const PROMPTS = [
@@ -151,10 +153,10 @@ if (missing.length) {
 
 let usersAdded = 0;
 const userIds = new Map();
-for (const { name, email } of USERS) {
+for (const { name, email, role } of USERS) {
   let user = await User.findOne({ email });
   if (!user) {
-    user = await User.create({ name, email, passwordHash: await hashPassword(password) });
+    user = await User.create({ name, email, role, passwordHash: await hashPassword(password) });
     usersAdded++;
   }
   userIds.set(email, user._id);
@@ -171,4 +173,5 @@ for (const { author, category, ...fields } of PROMPTS) {
 console.log(`Demo accounts: ${usersAdded} added, ${USERS.length - usersAdded} already there.`);
 console.log(`Demo prompts: ${promptsAdded} added, ${PROMPTS.length - promptsAdded} already there.`);
 console.log(`Log in as ${USERS.map((u) => u.email).join(', ')} with DEMO_PASSWORD.`);
+console.log('admin.demo@example.com is an admin.');
 process.exit(0);

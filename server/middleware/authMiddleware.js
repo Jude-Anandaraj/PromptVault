@@ -29,3 +29,11 @@ export async function protect(req, res, next) {
   req.user = user;
   next();
 }
+
+// Use after protect. Lets the request through only if the logged-in user is an admin.
+export function requireAdmin(req, res, next) {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Only admins can do this.' });
+  }
+  next();
+}

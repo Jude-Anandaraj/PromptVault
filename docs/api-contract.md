@@ -49,6 +49,12 @@ Errors use `{ "error": "message" }`. Field problems also include `details`.
 | POST | /api/prompts | logged-in member |
 | PUT | /api/prompts/:id | the author, or an admin |
 | DELETE | /api/prompts/:id | the author, or an admin |
+| GET | /api/categories/admin | an admin |
+| POST | /api/categories | an admin |
+| PUT | /api/categories/:id | an admin |
+| DELETE | /api/categories/:id | an admin |
+
+`GET /api/categories/admin` returns `{ "categories": [ { "_id", "name", "description", "promptCount" } ] }` for the admin page. POST and PUT take `{ "name", "description" }`. Names are 2–40 characters and unique, ignoring capitals (409 if taken). DELETE returns 409 while any prompt still uses the category.
 
 `category=All` or an empty category means no category filter. `q` searches title, description, and tags. A search with no hits returns an empty list, not an error.
 

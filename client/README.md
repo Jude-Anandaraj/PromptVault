@@ -33,12 +33,13 @@ Restart `npm run dev` after changing `.env`. The server only accepts requests fr
 | Location | Contents |
 |---|---|
 | `src/main.jsx` | entry point |
-| `src/App.jsx` | page routes; `/create`, `/prompts/:id/edit` and `/account` require login |
+| `src/App.jsx` | page routes; `/create`, `/prompts/:id/edit` and `/account` require login, `/admin/categories` requires an admin |
 | `src/pages/Home.jsx` | Explore page: search, category filters and prompt list |
 | `src/pages/Auth.jsx` | login and register forms |
-| `src/pages/PromptDetail.jsx` | one prompt, with copy, edit and delete |
+| `src/pages/PromptDetail.jsx` | one prompt, with copy; edit and delete for its author or an admin |
 | `src/pages/PromptForm.jsx` | create and edit form |
 | `src/pages/Account.jsx` | account settings: change name, email or password, delete the account |
+| `src/pages/AdminCategories.jsx` | admins only: add, rename and delete categories |
 | `src/components/` | `Navbar`, `PromptCard` |
 | `src/context/AuthContext.jsx` | the logged-in user, shared with every page |
 | `src/services/api.js` | every call to the API |
@@ -68,5 +69,9 @@ All calls are in `src/services/api.js`:
 | `api.createPrompt(body)` | `POST /api/prompts` |
 | `api.updatePrompt(id, body)` | `PUT /api/prompts/:id` |
 | `api.deletePrompt(id)` | `DELETE /api/prompts/:id` |
+| `api.adminCategories()` | `GET /api/categories/admin` |
+| `api.createCategory(body)` | `POST /api/categories` |
+| `api.updateCategory(id, body)` | `PUT /api/categories/:id` |
+| `api.deleteCategory(id)` | `DELETE /api/categories/:id` |
 
 Errors from the server are shown to the user. For validation errors, each field's message from `details` is shown.

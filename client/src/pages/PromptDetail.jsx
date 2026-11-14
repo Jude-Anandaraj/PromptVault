@@ -43,7 +43,9 @@ export default function PromptDetail() {
     );
   if (!prompt)
     return <main className="content empty-state">Loading prompt...</main>;
-  const owner = user && String(user.id) === String(prompt.author?._id);
+  // The author can edit and delete their prompt, and so can an admin.
+  const canManage =
+    user && (String(user.id) === String(prompt.author?._id) || user.role === "admin");
   return (
     <main className="detail-wrap">
       <Link to="/" className="back-link">
@@ -52,7 +54,7 @@ export default function PromptDetail() {
       <article className="detail-card">
         <div className="detail-head">
           <span className="category-pill">{prompt.category}</span>
-          {owner && (
+          {canManage && (
             <div className="detail-actions">
               <Link
                 className="button button-outline button-small"

@@ -91,6 +91,18 @@ npm run dev
 
 Open http://localhost:5173 in a browser.
 
+## Who can do what
+
+| | Visitor | Member | Admin |
+|---|---|---|---|
+| Browse, search and copy prompts | ✅ | ✅ | ✅ |
+| Create prompts; edit and delete their own | | ✅ | ✅ |
+| Edit their account or delete it (Account page) | | ✅ | ✅ |
+| Edit and delete **any** prompt | | | ✅ |
+| Add, rename and delete categories (Categories page) | | | ✅ |
+
+Everyone who signs up is a member. To make an account an admin, run `npm run make-admin -- someone@example.com` in `server/`.
+
 ## Deployment (Netlify)
 
 The site is deployed on Netlify from the `main` branch. Every push to `main` redeploys it. `netlify.toml` holds the settings:

@@ -42,5 +42,11 @@ export const api = {
   prompt: id => request(`/prompts/${id}`),
   createPrompt: body => request('/prompts', { method: 'POST', body: JSON.stringify(body) }),
   updatePrompt: (id, body) => request(`/prompts/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
-  deletePrompt: id => request(`/prompts/${id}`, { method: 'DELETE' })
+  deletePrompt: id => request(`/prompts/${id}`, { method: 'DELETE' }),
+
+  // Category management (admins only)
+  adminCategories: () => request('/categories/admin'),
+  createCategory: body => request('/categories', { method: 'POST', body: JSON.stringify(body) }),
+  updateCategory: (id, body) => request(`/categories/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteCategory: id => request(`/categories/${id}`, { method: 'DELETE' })
 };
