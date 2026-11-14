@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import PromptDetail from "./pages/PromptDetail";
 import PromptForm from "./pages/PromptForm";
+import Account from "./pages/Account";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -32,6 +33,14 @@ function Layout() {
           element={
             <Protected>
               <PromptForm edit />
+            </Protected>
+          }
+        />
+        <Route
+          path="/account"
+          element={
+            <Protected>
+              <Account />
             </Protected>
           }
         />

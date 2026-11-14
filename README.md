@@ -72,6 +72,8 @@ The first time you use a database, add the starting categories:
 npm run seed
 ```
 
+To also add 3 demo accounts and 12 sample prompts, set `DEMO_PASSWORD` in `server/.env` and run `npm run seed:demo` instead. The server README has the details.
+
 Open http://localhost:3000/api/health to check that the API is running. It should return:
 
 ```json

@@ -592,3 +592,16 @@ select {
     margin: 7px 0 0;
   }
 }
+.success {
+  background: #143428;
+  color: #b8f5d8;
+  border: 1px solid #2c6b50;
+}
+.form-card + .form-card {
+  margin-top: 24px;
+}
+.danger-card h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #ffc0ce;
+}

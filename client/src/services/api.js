@@ -33,6 +33,8 @@ export const api = {
   register: body => request('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
   login: body => request('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
   profile: () => request('/users/profile'),
+  updateProfile: body => request('/users/profile', { method: 'PUT', body: JSON.stringify(body) }),
+  deleteAccount: password => request('/users/profile', { method: 'DELETE', body: JSON.stringify({ password }) }),
 
   // Prompts and categories
   prompts: (q = '', category = 'All') => request(`/prompts?q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}`),

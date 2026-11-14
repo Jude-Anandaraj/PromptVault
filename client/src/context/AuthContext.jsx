@@ -29,8 +29,12 @@ export function AuthProvider({ children }) {
     clearToken();
     setUser(null);
   }
+  // Called with the updated user after the profile is saved.
+  function updateUser(updated) {
+    setUser(updated);
+  }
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
