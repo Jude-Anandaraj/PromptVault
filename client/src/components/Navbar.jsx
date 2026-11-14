@@ -1,9 +1,10 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Sparkles, Plus, LogOut, UserRound } from "lucide-react";
+import { Sparkles, Plus, LogOut, UserRound, Tag } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 export default function Navbar() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = user?.role === "admin";
   return (
     <header className="topbar">
       <div className="nav-inner">
@@ -22,12 +23,18 @@ export default function Navbar() {
               <Plus size={16} /> Create prompt
             </NavLink>
           )}
+          {isAdmin && (
+            <NavLink to="/admin/categories" className="create-link">
+              <Tag size={15} /> Categories
+            </NavLink>
+          )}
         </nav>
         <div className="nav-user">
           {user ? (
             <>
               <Link to="/account" className="user-label" title="Account settings">
                 <UserRound size={15} /> {user.name}
+                {isAdmin && <span className="role-badge">Admin</span>}
               </Link>
               <button
                 className="icon-button"

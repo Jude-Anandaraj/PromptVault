@@ -5,11 +5,27 @@ import Auth from "./pages/Auth";
 import PromptDetail from "./pages/PromptDetail";
 import PromptForm from "./pages/PromptForm";
 import Account from "./pages/Account";
+import AdminCategories from "./pages/AdminCategories";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 function Protected({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="empty-state">Loading...</div>;
   return user ? children : <Navigate to="/login" replace />;
+}
+// Pages for admins only. The server checks the role again on every request.
+function AdminOnly({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="empty-state">Loading...</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== "admin")
+    return (
+      <main className="empty-state">
+        <h2>Admins only</h2>
+        <p>You need an admin account to open this page.</p>
+        <Link to="/">Return home</Link>
+      </main>
+    );
+  return children;
 }
 function Layout() {
   return (
@@ -42,6 +58,14 @@ function Layout() {
             <Protected>
               <Account />
             </Protected>
+          }
+        />
+        <Route
+          path="/admin/categories"
+          element={
+            <AdminOnly>
+              <AdminCategories />
+            </AdminOnly>
           }
         />
         <Route

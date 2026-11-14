@@ -27,9 +27,10 @@ Before the first start, fill in `MONGODB_URI` and `JWT_SECRET` in `.env` (see [E
 | `npm run dev` | starts the API and restarts it whenever a file changes |
 | `npm start` | starts the API without restarting on changes |
 | `npm run seed` | adds the starting categories to the database |
-| `npm run seed:demo` | adds the categories, 3 demo accounts and 12 sample prompts (needs `DEMO_PASSWORD` in `.env`) |
+| `npm run seed:demo` | adds the categories, 4 demo accounts (one of them an admin) and 12 sample prompts (needs `DEMO_PASSWORD` in `.env`) |
+| `npm run make-admin -- someone@example.com` | makes an existing account an admin; add `--remove` to make it a member again |
 
-`npm run seed:demo` creates the accounts `alex.demo@example.com`, `priya.demo@example.com` and `sam.demo@example.com`, all using the password in `DEMO_PASSWORD`. It adds 3 sample prompts in each category. Running it again only adds what is missing. Keep `DEMO_PASSWORD` private: anyone who knows it can log in as the demo accounts on the live site.
+`npm run seed:demo` creates the members `alex.demo@example.com`, `priya.demo@example.com` and `sam.demo@example.com`, and the admin `admin.demo@example.com`, all using the password in `DEMO_PASSWORD`. It adds 3 sample prompts in each category. Running it again only adds what is missing. Keep `DEMO_PASSWORD` private: anyone who knows it can log in as the demo accounts on the live site.
 
 ## Request flow
 
@@ -46,7 +47,7 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 | `app.js` | Express app: CORS, JSON parsing, routes and error handling |
 | `config/env.js` | loads variables from `.env` |
 | `config/database.js` | MongoDB connection |
-| `middleware/authMiddleware.js` | `protect`: lets a request through only with a valid login token, and sets `req.user` |
+| `middleware/authMiddleware.js` | `protect`: lets a request through only with a valid login token, and sets `req.user`; `requireAdmin`: admins only |
 | `middleware/validateAuth.js` | checks registration and login data before it reaches the controller |
 | `middleware/validateUser.js` | checks profile updates and account deletion |
 | `middleware/errorHandler.js` | 404 handler and central error handler |
@@ -56,13 +57,14 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 | `controllers/authController.js` | registration and login |
 | `controllers/userController.js` | the logged-in user's profile: view, update, delete |
 | `controllers/promptController.js` | list, search, read, create, edit and delete prompts, with ownership checks |
-| `controllers/categoryController.js` | list category names |
+| `controllers/categoryController.js` | list category names; for admins, add, rename and delete categories |
 | `routes/authRoutes.js` | `/api/auth` routes |
 | `routes/userRoutes.js` | `/api/users` routes |
 | `routes/promptRoutes.js` | `/api/prompts` routes; create, edit and delete require login |
-| `routes/categoryRoutes.js` | `/api/categories` route |
+| `routes/categoryRoutes.js` | `/api/categories` routes; changes require an admin |
 | `scripts/seed-categories.js` | adds the starting categories (`npm run seed`) |
 | `scripts/seed-demo.js` | adds demo accounts and sample prompts (`npm run seed:demo`) |
+| `scripts/make-admin.js` | gives an account the admin role (`npm run make-admin`) |
 | `utils/token.js` | creates and checks JWT login tokens |
 | `utils/password.js` | hashes and checks passwords with bcrypt |
 
@@ -81,6 +83,10 @@ To add a feature:
 | PUT | `/api/users/profile` | **yes** | `200` with the updated user |
 | DELETE | `/api/users/profile` | **yes** | `200`; deletes the account and its prompts |
 | GET | `/api/categories` | no | `200` with a list of category names |
+| GET | `/api/categories/admin` | **admin** | `200` with every category's `_id`, `name`, `description` and `promptCount` |
+| POST | `/api/categories` | **admin** | `201` with the new category; body `{ "name", "description" }` |
+| PUT | `/api/categories/:id` | **admin** | `200` with the renamed category; body `{ "name", "description" }` |
+| DELETE | `/api/categories/:id` | **admin** | `200`, or `409` while prompts still use the category |
 | GET | `/api/prompts?q=&category=&platform=` | no | `200` with matching prompts, newest first |
 | GET | `/api/prompts/:id` | no | `200` with one prompt |
 | POST | `/api/prompts` | **yes** | `201` with the new prompt |
@@ -243,6 +249,24 @@ router.post('/', protect, createPrompt);
 Requests without a valid token are stopped with `401` and never reach the controller. Inside the controller, `req.user` is the logged-in user.
 
 To check who owns something, such as a prompt's author, use `req.user._id`. Never trust a user id sent in the request body.
+
+### Admin role
+
+Every account has a `role`: `member` (the default) or `admin`.
+- **Registering:** always creates a member. A `role` sent in a request is ignored everywhere.
+- **Making an admin:** run `npm run make-admin -- someone@example.com`, or use the demo admin from `npm run seed:demo`.
+- **What admins can do:**
+  - edit and delete any prompt, not just their own
+  - add, rename and delete categories (`requireAdmin`, used after `protect`)
+- **Members** get `403 { "error": "Only admins can do this." }` on admin routes.
+
+The role is read from the database on every request, so a change takes effect immediately, without logging in again.
+
+```js
+import { protect, requireAdmin } from '../middleware/authMiddleware.js';
+
+router.post('/', protect, requireAdmin, createCategory);
+```
 
 ### When `protect` returns 401
 

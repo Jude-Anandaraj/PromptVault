@@ -28,7 +28,8 @@ export default function PromptForm({ edit = false }) {
       api
         .prompt(id)
         .then(({ prompt }) => {
-          if (String(user?.id) !== String(prompt.author?._id)) {
+          // Only the author or an admin may edit.
+          if (String(user?.id) !== String(prompt.author?._id) && user?.role !== "admin") {
             navigate(`/prompts/${id}`, { replace: true });
             return;
           }
