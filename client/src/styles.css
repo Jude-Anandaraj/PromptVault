@@ -48,6 +48,7 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 .brand {
   display: flex;
@@ -530,7 +531,8 @@ select {
   .nav-inner nav {
     gap: 13px;
   }
-  .user-label {
+  /* Keep the account icon (and Admin badge) as the link; hide only the name. */
+  .user-name {
     display: none;
   }
 }
@@ -540,6 +542,11 @@ select {
   }
   .nav-inner {
     padding: 0 14px;
+    gap: 12px;
+  }
+  /* Icon-only menu links on phones. */
+  .nav-text {
+    display: none;
   }
   .brand {
     font-size: 16px;
@@ -663,5 +670,11 @@ select {
   .category-row {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+@media (max-width: 420px) {
+  /* Very small phones: the Categories icon already shows the user is an admin. */
+  .role-badge {
+    display: none;
   }
 }

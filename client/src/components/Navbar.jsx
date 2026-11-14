@@ -18,22 +18,23 @@ export default function Navbar() {
           <NavLink to="/" end>
             Explore
           </NavLink>
+          {/* On phones only the icons show, so the links keep their names in aria-label and title. */}
           {user && (
-            <NavLink to="/create" className="create-link">
-              <Plus size={16} /> Create prompt
+            <NavLink to="/create" className="create-link" aria-label="Create prompt" title="Create prompt">
+              <Plus size={16} /> <span className="nav-text">Create prompt</span>
             </NavLink>
           )}
           {isAdmin && (
-            <NavLink to="/admin/categories" className="create-link">
-              <Tag size={15} /> Categories
+            <NavLink to="/admin/categories" className="create-link" aria-label="Categories" title="Categories">
+              <Tag size={15} /> <span className="nav-text">Categories</span>
             </NavLink>
           )}
         </nav>
         <div className="nav-user">
           {user ? (
             <>
-              <Link to="/account" className="user-label" title="Account settings">
-                <UserRound size={15} /> {user.name}
+              <Link to="/account" className="user-label" title="Account settings" aria-label={`Account settings for ${user.name}`}>
+                <UserRound size={15} /> <span className="user-name">{user.name}</span>
                 {isAdmin && <span className="role-badge">Admin</span>}
               </Link>
               <button
