@@ -27,6 +27,9 @@ Before the first start, fill in `MONGODB_URI` and `JWT_SECRET` in `.env` (see [E
 | `npm run dev` | starts the API and restarts it whenever a file changes |
 | `npm start` | starts the API without restarting on changes |
 | `npm run seed` | adds the starting categories to the database |
+| `npm run seed:demo` | adds the categories, 3 demo accounts and 12 sample prompts (needs `DEMO_PASSWORD` in `.env`) |
+
+`npm run seed:demo` creates the accounts `alex.demo@example.com`, `priya.demo@example.com` and `sam.demo@example.com`, all using the password in `DEMO_PASSWORD`. It adds 3 sample prompts in each category. Running it again only adds what is missing. Keep `DEMO_PASSWORD` private: anyone who knows it can log in as the demo accounts on the live site.
 
 ## Request flow
 
@@ -45,12 +48,13 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 | `config/database.js` | MongoDB connection |
 | `middleware/authMiddleware.js` | `protect`: lets a request through only with a valid login token, and sets `req.user` |
 | `middleware/validateAuth.js` | checks registration and login data before it reaches the controller |
+| `middleware/validateUser.js` | checks profile updates and account deletion |
 | `middleware/errorHandler.js` | 404 handler and central error handler |
 | `models/User.js` | User schema: name, email, password hash, role, timestamps |
 | `models/Prompt.js` | Prompt schema: title, description, content, platform, tags, author and category ids, timestamps |
 | `models/Category.js` | Category schema: unique name, description |
 | `controllers/authController.js` | registration and login |
-| `controllers/userController.js` | the logged-in user's profile |
+| `controllers/userController.js` | the logged-in user's profile: view, update, delete |
 | `controllers/promptController.js` | list, search, read, create, edit and delete prompts, with ownership checks |
 | `controllers/categoryController.js` | list category names |
 | `routes/authRoutes.js` | `/api/auth` routes |
@@ -58,7 +62,9 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 | `routes/promptRoutes.js` | `/api/prompts` routes; create, edit and delete require login |
 | `routes/categoryRoutes.js` | `/api/categories` route |
 | `scripts/seed-categories.js` | adds the starting categories (`npm run seed`) |
+| `scripts/seed-demo.js` | adds demo accounts and sample prompts (`npm run seed:demo`) |
 | `utils/token.js` | creates and checks JWT login tokens |
+| `utils/password.js` | hashes and checks passwords with bcrypt |
 
 To add a feature:
 1. Create its route file in `routes/`.
@@ -72,6 +78,8 @@ To add a feature:
 | POST | `/api/auth/register` | no | `201` with a login token and the new user |
 | POST | `/api/auth/login` | no | `200` with a login token and the user |
 | GET | `/api/users/profile` | **yes** | `200` with the logged-in user |
+| PUT | `/api/users/profile` | **yes** | `200` with the updated user |
+| DELETE | `/api/users/profile` | **yes** | `200`; deletes the account and its prompts |
 | GET | `/api/categories` | no | `200` with a list of category names |
 | GET | `/api/prompts?q=&category=&platform=` | no | `200` with matching prompts, newest first |
 | GET | `/api/prompts/:id` | no | `200` with one prompt |
@@ -172,6 +180,44 @@ Requires the header `Authorization: Bearer <token>`.
 
 Returns `401` if the token is missing or invalid (see below).
 
+### PUT /api/users/profile
+
+Requires the header `Authorization: Bearer <token>`. Send only the fields to change, but at least one of `name`, `email` or `newPassword`:
+
+```json
+{ "name": "New Name", "email": "new@example.com", "newPassword": "NewPassword123", "currentPassword": "Password123" }
+```
+
+| Field | Rule |
+|---|---|
+| `name` | 2 to 50 characters |
+| `email` | valid email address, not used by another account |
+| `newPassword` | 8 to 72 characters |
+| `currentPassword` | required when changing `email` or `newPassword`, so a stolen token alone can't take over the account |
+
+`200 OK`: `{ "message": "Profile updated.", "user": { … } }`. Tokens issued before a password change stay valid until they expire.
+
+| Status | When | Body |
+|---|---|---|
+| `400` | no field sent, or a field is invalid | `{ "error": "Validation failed.", "details": { "name": "Name must be 2 to 50 characters." } }` |
+| `403` | `currentPassword` is missing or wrong | `{ "error": "Current password is incorrect." }` |
+| `409` | the new email belongs to another account | `{ "error": "This email is already in use." }` |
+
+### DELETE /api/users/profile
+
+Requires the header `Authorization: Bearer <token>`, and the password to confirm:
+
+```json
+{ "password": "Password123" }
+```
+
+Deletes the account and every prompt it created. `200 OK`: `{ "message": "Account deleted.", "promptsDeleted": 3 }`
+
+| Status | When | Body |
+|---|---|---|
+| `400` | password missing | `{ "error": "Validation failed.", "details": { "password": "Enter your password to confirm." } }` |
+| `403` | wrong password | `{ "error": "Password is incorrect." }` |
+
 ## Authentication
 
 Logging in returns a JWT (JSON Web Token). The client stores it and sends it with every request that needs a logged-in user:
@@ -222,6 +268,7 @@ Settings are read from `server/.env`:
 | `CLIENT_ORIGIN` | address of the React app, used for CORS | `http://localhost:5173` |
 | `JWT_SECRET` | secret used to sign login tokens; at least 32 random characters | required |
 | `JWT_EXPIRES_IN` | how long a login token stays valid, with a unit: `30m`, `2h`, `1d` | `2h` |
+| `DEMO_PASSWORD` | password for the demo accounts; only used by `npm run seed:demo` | none |
 
 Generate a `JWT_SECRET` with:
 

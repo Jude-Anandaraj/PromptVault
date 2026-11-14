@@ -1,9 +1,6 @@
-import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { createToken } from '../utils/token.js';
-
-// Higher is slower to hash and harder to crack. 12 takes a fraction of a second.
-const SALT_ROUNDS = 12;
+import { hashPassword, checkPassword } from '../utils/password.js';
 
 // POST /api/auth/register
 // The request body has already been checked by validateRegister.
@@ -18,7 +15,7 @@ export async function register(req, res) {
     return res.status(409).json({ error: 'This email is already in use.' });
   }
 
-  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+  const passwordHash = await hashPassword(password);
 
   // Only these fields are saved. A "role" sent by the client is ignored,
   // so every new account is a member.
@@ -37,15 +34,8 @@ export async function login(req, res) {
   // passwordHash is hidden by default (select: false), so request it here.
   const user = await User.findOne({ email }).select('+passwordHash');
 
-  // bcrypt only reads the first 72 bytes, and registration never allows
-  // longer passwords, so a longer one can never be correct.
-  const passwordMatches =
-    user !== null &&
-    Buffer.byteLength(password) <= 72 &&
-    (await bcrypt.compare(password, user.passwordHash));
-
   // Same message for a wrong email or a wrong password.
-  if (!passwordMatches) {
+  if (!user || !(await checkPassword(password, user.passwordHash))) {
     return res.status(401).json({ error: 'Invalid email or password.' });
   }
 

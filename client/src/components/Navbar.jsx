@@ -26,9 +26,9 @@ export default function Navbar() {
         <div className="nav-user">
           {user ? (
             <>
-              <span className="user-label">
+              <Link to="/account" className="user-label" title="Account settings">
                 <UserRound size={15} /> {user.name}
-              </span>
+              </Link>
               <button
                 className="icon-button"
                 title="Log out"
