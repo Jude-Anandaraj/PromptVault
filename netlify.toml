@@ -7,6 +7,11 @@
   publish = "client/dist"
   functions = "server/functions"
 
+[functions]
+  # Bundle the API into one file with esbuild. Without this, Netlify converts each
+  # file separately and the Express routes load as objects, which crashes the function.
+  node_bundler = "esbuild"
+
 [build.environment]
   NODE_VERSION = "22"
   # The React app and the API are on the same site, so the API address is just /api.
