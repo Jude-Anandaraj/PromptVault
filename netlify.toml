@@ -1,0 +1,25 @@
+# Netlify deployment settings.
+# The React app is served as static files, and the Express API runs as a Netlify Function.
+
+[build]
+  # Install the server's packages (needed by the function) and build the React app.
+  command = "npm ci --prefix server && npm ci --prefix client && npm run build --prefix client"
+  publish = "client/dist"
+  functions = "server/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # The React app and the API are on the same site, so the API address is just /api.
+  VITE_API_BASE_URL = "/api"
+
+# Send API requests to the function.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Let React Router handle every other page, e.g. refreshing /login.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

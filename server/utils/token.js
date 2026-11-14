@@ -12,7 +12,7 @@ function expiresIn() {
 export function checkTokenSettings() {
   const secret = process.env.JWT_SECRET;
   if (!secret || secret.length < 32) {
-    throw new Error('JWT_SECRET must be set in server/.env and be at least 32 characters long.');
+    throw new Error('JWT_SECRET must be set (in server/.env, or in the environment variables on Netlify) and be at least 32 characters long.');
   }
   try {
     jwt.sign({}, secret, { algorithm: ALGORITHM, expiresIn: expiresIn() });
