@@ -25,9 +25,12 @@ PromptVault/
 │   ├── middleware/         authentication and error handling
 │   ├── models/             Mongoose schemas: User, Prompt, Category
 │   ├── routes/             URL-to-controller mapping
+│   ├── functions/          Netlify Function that runs the API online
+│   ├── scripts/            database seed script
 │   └── utils/              shared helpers, e.g. login tokens
 ├── docs/                   project documents and evidence
 ├── postman/                Postman collection for API tests
+├── netlify.toml            Netlify build and redirect settings
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -63,6 +66,12 @@ In `server/.env`, set:
 
 This file is never committed.
 
+The first time you use a database, add the starting categories:
+
+```bash
+npm run seed
+```
+
 Open http://localhost:3000/api/health to check that the API is running. It should return:
 
 ```json
@@ -79,6 +88,24 @@ npm run dev
 ```
 
 Open http://localhost:5173 in a browser.
+
+## Deployment (Netlify)
+
+The site is deployed on Netlify from the `main` branch. Every push to `main` redeploys it. `netlify.toml` holds the settings:
+- **React app:** built into `client/dist` and served as static files.
+- **API:** the Express app runs as a Netlify Function (`server/functions/api.js`). Requests to `/api/*` are sent to it, so the app and the API share one address.
+
+Environment variables in the Netlify site settings (scope must include **Functions**):
+
+| Variable | Value |
+|---|---|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | random string of at least 32 characters, different from any local one |
+| `JWT_EXPIRES_IN` | `2h` |
+
+Changes to these only apply after the next deploy (**Deploys → Trigger deploy**). MongoDB Atlas must allow connections from anywhere (`0.0.0.0/0`), because Netlify Functions have no fixed IP address. Run `npm run seed` once against the Atlas database so the categories exist.
+
+Check a deploy at `/api/health`. If the API fails, the errors are under **Logs → Functions → api** in Netlify.
 
 ## Team
 

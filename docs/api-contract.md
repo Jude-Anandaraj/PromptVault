@@ -1,6 +1,6 @@
 # Prompt and category API
 
-Vadim Gubin, 301538942. First release of the prompt database.
+Vadim Gubin. First release of the prompt database.
 
 This matches the React client that is already in the repo. Category values on the wire are names, not ids. The database still stores a category id and an author id.
 

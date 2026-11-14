@@ -95,6 +95,7 @@ export default function PromptForm({ edit = false }) {
               value={form.title}
               onChange={change}
               required
+              minLength="3"
               maxLength="100"
               placeholder="e.g. Product description writer"
             />
@@ -106,6 +107,7 @@ export default function PromptForm({ edit = false }) {
               value={form.description}
               onChange={change}
               required
+              minLength="10"
               maxLength="500"
               rows="2"
               placeholder="What does this prompt help people do?"
@@ -137,6 +139,7 @@ export default function PromptForm({ edit = false }) {
               value={form.content}
               onChange={change}
               required
+              minLength="10"
               maxLength="12000"
               rows="9"
               placeholder="Write the full prompt here. Use [brackets] for details people should customize."

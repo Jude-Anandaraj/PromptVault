@@ -1,4 +1,4 @@
-Vadim Gubin, 301538942. Spoken notes for the PromptVault slides. About one minute.
+Vadim Gubin. Spoken notes for the PromptVault slides. About one minute.
 
 Slide 1.
 My part of PromptVault is the prompt database and the API that saves and reads prompts.

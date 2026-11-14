@@ -14,15 +14,19 @@ The React app in `client/` is the view.
 ```bash
 npm install
 cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env
+npm run seed
 npm run dev
 ```
 
 Before the first start, fill in `MONGODB_URI` and `JWT_SECRET` in `.env` (see [Environment variables](#environment-variables)). The server will not start without a valid `JWT_SECRET`.
 
+`npm run seed` adds the starting categories (Coding, Images, Studying, Writing) to the database in `MONGODB_URI`. Run it once for each new database, including MongoDB Atlas. Without categories, prompts can't be created. Running it again changes nothing.
+
 | Script | What it does |
 |---|---|
 | `npm run dev` | starts the API and restarts it whenever a file changes |
 | `npm start` | starts the API without restarting on changes |
+| `npm run seed` | adds the starting categories to the database |
 
 ## Request flow
 
@@ -34,7 +38,8 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 
 | Location | Contents |
 |---|---|
-| `server.js` | entry point: loads `.env`, checks the token settings, connects to MongoDB, then starts the server |
+| `server.js` | entry point when running locally: loads `.env`, checks the token settings, connects to MongoDB, then starts the server |
+| `functions/api.js` | entry point on Netlify: runs the same Express app as a Netlify Function |
 | `app.js` | Express app: CORS, JSON parsing, routes and error handling |
 | `config/env.js` | loads variables from `.env` |
 | `config/database.js` | MongoDB connection |
@@ -42,10 +47,17 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 | `middleware/validateAuth.js` | checks registration and login data before it reaches the controller |
 | `middleware/errorHandler.js` | 404 handler and central error handler |
 | `models/User.js` | User schema: name, email, password hash, role, timestamps |
+| `models/Prompt.js` | Prompt schema: title, description, content, platform, tags, author and category ids, timestamps |
+| `models/Category.js` | Category schema: unique name, description |
 | `controllers/authController.js` | registration and login |
 | `controllers/userController.js` | the logged-in user's profile |
+| `controllers/promptController.js` | list, search, read, create, edit and delete prompts, with ownership checks |
+| `controllers/categoryController.js` | list category names |
 | `routes/authRoutes.js` | `/api/auth` routes |
 | `routes/userRoutes.js` | `/api/users` routes |
+| `routes/promptRoutes.js` | `/api/prompts` routes; create, edit and delete require login |
+| `routes/categoryRoutes.js` | `/api/categories` route |
+| `scripts/seed-categories.js` | adds the starting categories (`npm run seed`) |
 | `utils/token.js` | creates and checks JWT login tokens |
 
 To add a feature:
@@ -60,6 +72,14 @@ To add a feature:
 | POST | `/api/auth/register` | no | `201` with a login token and the new user |
 | POST | `/api/auth/login` | no | `200` with a login token and the user |
 | GET | `/api/users/profile` | **yes** | `200` with the logged-in user |
+| GET | `/api/categories` | no | `200` with a list of category names |
+| GET | `/api/prompts?q=&category=&platform=` | no | `200` with matching prompts, newest first |
+| GET | `/api/prompts/:id` | no | `200` with one prompt |
+| POST | `/api/prompts` | **yes** | `201` with the new prompt |
+| PUT | `/api/prompts/:id` | **yes**, author or admin | `200` with the updated prompt, or `403` |
+| DELETE | `/api/prompts/:id` | **yes**, author or admin | `200`, or `403` |
+
+The prompt and category request and response formats are in [docs/api-contract.md](../docs/api-contract.md).
 
 ### POST /api/auth/register
 
@@ -212,3 +232,5 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 Each developer uses their own secret in their own `.env`. Anyone who knows the secret can create valid tokens, so never commit it or share it.
 
 `.env.example` lists these variables without real credentials and is committed. `.env` holds the real values, stays on each developer's machine and is ignored by Git.
+
+On Netlify, the same variables are set in the site's **Environment variables** settings instead of `.env` (see the root README).
