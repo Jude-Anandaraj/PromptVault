@@ -1,0 +1,13 @@
+Vadim Gubin, 301538942. Spoken notes for the PromptVault slides. About one minute.
+
+Slide 1.
+My part of PromptVault is the prompt database and the API that saves and reads prompts.
+
+Slide 2.
+There are two collections. A category is just a name, like Coding or Studying. A prompt has a title, a short description, the prompt text, some tags, one category, and one author.
+
+Slide 3.
+Anyone can browse and search. A member has to be logged in to publish. Only the author of a prompt can edit it or delete it. The server checks that. The page hiding a button is not enough.
+
+Slide 4.
+The routes are get prompts, get one prompt, get categories, then post, put, and delete for a signed-in owner. A bad id, a missing field, or someone else's prompt comes back as an error, not as a saved change.

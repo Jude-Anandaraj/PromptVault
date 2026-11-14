@@ -3,6 +3,8 @@ import cors from 'cors';
 import { isDBConnected } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import promptRoutes from './routes/promptRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -25,6 +27,8 @@ app.get('/api/health', (req, res) => {
 // Feature routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/prompts', promptRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // These two must stay last.
 app.use(notFound);
