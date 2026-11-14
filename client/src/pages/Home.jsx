@@ -103,9 +103,7 @@ export default function Home() {
           )}
         </div>
         {error && (
-          <div className="alert error">
-            {error} Make sure the backend is running.
-          </div>
+          <div className="alert error">{error}</div>
         )}
         {loading ? (
           <div className="empty-state">Loading prompts...</div>

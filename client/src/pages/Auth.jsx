@@ -53,7 +53,8 @@ export default function Auth({ mode }) {
                 value={form.name}
                 onChange={change}
                 required
-                maxLength="60"
+                minLength="2"
+                maxLength="50"
                 placeholder="Your name"
               />
             </label>
@@ -78,6 +79,7 @@ export default function Auth({ mode }) {
               onChange={change}
               required
               minLength="8"
+              maxLength="72"
               placeholder="At least 8 characters"
             />
           </label>

@@ -74,8 +74,11 @@ Open http://localhost:3000/api/health to check that the API is running. It shoul
 ```bash
 cd client
 npm install
+cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env
 npm run dev
 ```
+
+Open http://localhost:5173 in a browser.
 
 ## Team
 

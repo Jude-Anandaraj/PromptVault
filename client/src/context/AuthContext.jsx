@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { api, getToken } from "../services/api";
+import { api, getToken, setToken, clearToken } from "../services/api";
 const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -9,18 +9,24 @@ export function AuthProvider({ children }) {
       setLoading(false);
       return;
     }
+    // After a page refresh, ask the server who the saved token belongs to.
     api
-      .me()
+      .profile()
       .then((data) => setUser(data.user))
-      .catch(() => localStorage.removeItem("promptvault_token"))
+      .catch((err) => {
+        // 401: the token is invalid or expired, so forget it.
+        // Other errors (e.g. the server is offline) keep it for the next visit.
+        if (err.status === 401) clearToken();
+      })
       .finally(() => setLoading(false));
   }, []);
+  // Called with the response of POST /auth/login or POST /auth/register.
   function signIn(data) {
-    localStorage.setItem("promptvault_token", data.token);
+    setToken(data.token);
     setUser(data.user);
   }
   function signOut() {
-    localStorage.removeItem("promptvault_token");
+    clearToken();
     setUser(null);
   }
   return (
