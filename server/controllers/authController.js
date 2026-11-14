@@ -24,7 +24,8 @@ export async function register(req, res) {
   // so every new account is a member.
   const user = await User.create({ name, email, passwordHash });
 
-  res.status(201).json({ message: 'Registration successful.', user });
+  // Return a login token too, so the user is signed in straight after registering.
+  res.status(201).json({ message: 'Registration successful.', token: createToken(user), user });
 }
 
 // POST /api/auth/login

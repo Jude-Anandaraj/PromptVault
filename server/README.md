@@ -57,7 +57,7 @@ To add a feature:
 | Method | URL | Login required | Response |
 |---|---|---|---|
 | GET | `/api/health` | no | `200 { "status": "ok", "database": "connected" }`, or `503` if the database is disconnected |
-| POST | `/api/auth/register` | no | `201` with the new user |
+| POST | `/api/auth/register` | no | `201` with a login token and the new user |
 | POST | `/api/auth/login` | no | `200` with a login token and the user |
 | GET | `/api/users/profile` | **yes** | `200` with the logged-in user |
 
@@ -77,11 +77,12 @@ Request body:
 
 New accounts always get the `member` role. A `role` sent in the request is ignored.
 
-`201 Created`:
+`201 Created` (the token logs the new user in straight away, the same as a login token):
 
 ```json
 {
   "message": "Registration successful.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
     "name": "Test User",
     "email": "test@example.com",
