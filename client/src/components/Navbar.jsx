@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Sparkles, Plus, LogOut, UserRound, Tag } from "lucide-react";
+import { Sparkles, Plus, LogOut, UserRound, Tag, UsersRound, CircleUserRound, Compass } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 export default function Navbar() {
   const { user, signOut } = useAuth();
@@ -8,15 +8,18 @@ export default function Navbar() {
   return (
     <header className="topbar">
       <div className="nav-inner">
-        <Link to="/" className="brand">
-          <span className="brand-icon">
+        <Link to="/" className="brand" aria-label="PromptVault home">
+          <span className="brand-icon" aria-hidden="true">
             <Sparkles size={19} />
           </span>
-          PromptVault
+          <span>PromptVault</span>
         </Link>
         <nav>
-          <NavLink to="/" end>
-            Explore
+          <NavLink to="/" end aria-label="Explore" title="Explore">
+            <Compass size={16} /> <span className="nav-text">Explore</span>
+          </NavLink>
+          <NavLink to="/users" className="create-link" aria-label="Users" title="Users">
+            <UsersRound size={16} /> <span className="nav-text">Users</span>
           </NavLink>
           {/* On phones only the icons show, so the links keep their names in aria-label and title. */}
           {user && (
@@ -29,11 +32,16 @@ export default function Navbar() {
               <Tag size={15} /> <span className="nav-text">Categories</span>
             </NavLink>
           )}
+          {user && (
+            <NavLink to="/profile" className="create-link" aria-label="My profile" title="My profile">
+              <CircleUserRound size={16} /> <span className="nav-text">My profile</span>
+            </NavLink>
+          )}
         </nav>
         <div className="nav-user">
           {user ? (
             <>
-              <Link to="/account" className="user-label" title="Account settings" aria-label={`Account settings for ${user.name}`}>
+              <Link to="/profile" className="user-label" title="My profile" aria-label={`My profile: ${user.name}`}>
                 <UserRound size={15} /> <span className="user-name">{user.name}</span>
                 {isAdmin && <span className="role-badge">Admin</span>}
               </Link>

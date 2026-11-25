@@ -6,6 +6,9 @@ import PromptDetail from "./pages/PromptDetail";
 import PromptForm from "./pages/PromptForm";
 import Account from "./pages/Account";
 import AdminCategories from "./pages/AdminCategories";
+import Members from "./pages/Members";
+import Member from "./pages/Member";
+import Profile from "./pages/Profile";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -35,6 +38,8 @@ function Layout() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Auth mode="login" />} />
         <Route path="/register" element={<Auth mode="register" />} />
+        <Route path="/users" element={<Members />} />
+        <Route path="/users/:id" element={<Member />} />
         <Route path="/prompts/:id" element={<PromptDetail />} />
         <Route
           path="/create"
@@ -49,6 +54,14 @@ function Layout() {
           element={
             <Protected>
               <PromptForm edit />
+            </Protected>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <Protected>
+              <Profile />
             </Protected>
           }
         />
