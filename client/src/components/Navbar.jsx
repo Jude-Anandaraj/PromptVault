@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Sparkles, Plus, LogOut, UserRound, Tag, UsersRound, CircleUserRound, Compass } from "lucide-react";
+import { Plus, LogOut, UserRound, Tag, UsersRound, CircleUserRound, Compass } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 export default function Navbar() {
   const { user, signOut } = useAuth();
@@ -9,9 +9,6 @@ export default function Navbar() {
     <header className="topbar">
       <div className="nav-inner">
         <Link to="/" className="brand" aria-label="PromptVault home">
-          <span className="brand-icon" aria-hidden="true">
-            <Sparkles size={19} />
-          </span>
           <span>PromptVault</span>
         </Link>
         <nav>
@@ -59,7 +56,7 @@ export default function Navbar() {
           ) : (
             <>
               <Link to="/login" className="login-link">
-                Log in
+                Sign In
               </Link>
               <Link to="/register" className="button button-small">
                 Sign up

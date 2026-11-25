@@ -45,6 +45,7 @@ export default function Members() {
               <span className="member-card-copy">
                 <strong>{user.name}</strong>
                 <span>Member since {new Date(user.createdAt).toLocaleDateString()}</span>
+                <span>{user.promptCount} {user.promptCount === 1 ? "prompt" : "prompts"}</span>
               </span>
               <UsersRound size={18} aria-hidden="true" />
             </Link>

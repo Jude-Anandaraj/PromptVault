@@ -58,7 +58,7 @@ export default function Member() {
           <span className="eyebrow">PUBLIC CONTRIBUTIONS</span>
           <h2>{member.name.split(" ")[0]}'s prompts</h2>
         </div>
-        <span className="result-count">{prompts.length} prompts</span>
+        <span className="result-count">{member.promptCount} {member.promptCount === 1 ? "prompt" : "prompts"}</span>
       </div>
       {prompts.length ? (
         <div className="prompt-grid">

@@ -43,9 +43,20 @@ export async function getMyPrompts(req, res) {
 
 // GET /api/users
 export async function listMembers(req, res) {
-  const users = await User.find().select('name createdAt').sort({ name: 1 });
+  const [users, promptCounts] = await Promise.all([
+    User.find().select('name createdAt').sort({ name: 1 }),
+    Prompt.aggregate([
+      { $group: { _id: '$userId', count: { $sum: 1 } } }
+    ])
+  ]);
+  const countsByUser = new Map(promptCounts.map(({ _id, count }) => [String(_id), count]));
   res.json({
-    users: users.map((user) => ({ id: user._id, name: user.name, createdAt: user.createdAt }))
+    users: users.map((user) => ({
+      id: user._id,
+      name: user.name,
+      createdAt: user.createdAt,
+      promptCount: countsByUser.get(String(user._id)) || 0
+    }))
   });
 }
 
@@ -57,9 +68,13 @@ export async function getMember(req, res) {
   const user = await User.findById(req.params.id).select('name createdAt');
   if (!user) return res.status(404).json({ error: 'Member not found.' });
 
+  const [prompts, promptCount] = await Promise.all([
+    promptsFor(user._id),
+    Prompt.countDocuments({ userId: user._id })
+  ]);
   res.json({
-    user: { id: user._id, name: user.name, createdAt: user.createdAt },
-    prompts: await promptsFor(user._id)
+    user: { id: user._id, name: user.name, createdAt: user.createdAt, promptCount },
+    prompts
   });
 }
 

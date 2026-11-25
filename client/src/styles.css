@@ -59,6 +59,16 @@ select {
     sans-serif;
   letter-spacing: -0.6px;
 }
+.brand-wordmark {
+  color: #eef2fa;
+  font: 800 17px Manrope, sans-serif;
+}
+.hero-brand {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #eef2fa;
+  font: 800 19px Manrope, sans-serif;
+}
 .brand-icon {
   width: 34px;
   height: 34px;
