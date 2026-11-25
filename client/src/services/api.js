@@ -33,6 +33,9 @@ export const api = {
   register: body => request('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
   login: body => request('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
   profile: () => request('/users/profile'),
+  myPrompts: () => request('/users/profile/prompts'),
+  members: () => request('/users'),
+  member: id => request(`/users/${encodeURIComponent(id)}`),
   updateProfile: body => request('/users/profile', { method: 'PUT', body: JSON.stringify(body) }),
   deleteAccount: password => request('/users/profile', { method: 'DELETE', body: JSON.stringify({ password }) }),
 

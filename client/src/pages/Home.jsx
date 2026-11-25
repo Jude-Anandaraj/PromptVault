@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Search, Sparkles } from "lucide-react";
 import PromptCard from "../components/PromptCard";
 import { api } from "../services/api";
@@ -49,6 +50,7 @@ export default function Home() {
       <section className="hero">
         <div className="hero-glow" />
         <div className="hero-content">
+          <Link to="/" className="hero-brand" aria-label="PromptVault home">PromptVault</Link>
           <span className="eyebrow">
             <Sparkles size={14} /> YOUR AI WORKSPACE
           </span>

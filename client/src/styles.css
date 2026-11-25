@@ -59,6 +59,16 @@ select {
     sans-serif;
   letter-spacing: -0.6px;
 }
+.brand-wordmark {
+  color: #eef2fa;
+  font: 800 17px Manrope, sans-serif;
+}
+.hero-brand {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #eef2fa;
+  font: 800 19px Manrope, sans-serif;
+}
 .brand-icon {
   width: 34px;
   height: 34px;
@@ -660,6 +670,169 @@ select {
   gap: 8px;
   flex-shrink: 0;
 }
+.member-page h1,
+.profile-page h1 {
+  font:
+    800 32px Manrope,
+    sans-serif;
+  margin: 8px 0 0;
+}
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+.member-card {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #293650;
+  border-radius: 12px;
+  background: #111b2d;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.member-card:hover {
+  border-color: #8274ca;
+  transform: translateY(-2px);
+}
+.member-mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #42396e;
+  border-radius: 11px;
+  background: #29244b;
+  color: #c9bcff;
+  font: 700 17px Manrope, sans-serif;
+}
+.member-card-copy {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 4px;
+}
+.member-card-copy strong {
+  overflow: hidden;
+  color: #eef2fa;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.member-card-copy > span {
+  color: #9aa6bb;
+  font-size: 11px;
+}
+.member-card > svg {
+  flex: 0 0 auto;
+  color: #8290a8;
+}
+.member-heading {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 0 32px;
+  border-bottom: 1px solid #263148;
+}
+.member-mark-large {
+  width: 68px;
+  height: 68px;
+  flex-basis: 68px;
+  border-radius: 16px;
+  font-size: 27px;
+}
+.member-heading .eyebrow {
+  letter-spacing: 1.5px;
+}
+.member-heading .muted {
+  margin: 8px 0 0;
+}
+.member-prompts-heading,
+.profile-prompts-heading {
+  margin: 32px 0 22px;
+}
+.member-prompts-heading h2,
+.profile-prompts-heading h2 {
+  margin: 7px 0 0;
+  font: 700 25px Manrope, sans-serif;
+}
+.profile-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 6px 0 24px;
+}
+.profile-heading .muted {
+  margin: 7px 0 0;
+}
+.profile-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  padding: 18px 0;
+  border-top: 1px solid #263148;
+  border-bottom: 1px solid #263148;
+}
+.profile-details > div {
+  min-width: 150px;
+  display: grid;
+  gap: 5px;
+}
+.profile-details span {
+  color: #8290a8;
+  font-size: 11px;
+}
+.profile-details strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #e9edf5;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.owned-prompt-list {
+  display: grid;
+  gap: 10px;
+}
+.owned-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px 18px;
+  border: 1px solid #293650;
+  border-radius: 11px;
+  background: #111b2d;
+}
+.owned-prompt-copy {
+  min-width: 0;
+}
+.owned-prompt-copy h3 {
+  margin: 10px 0 5px;
+  font: 700 16px Manrope, sans-serif;
+}
+.owned-prompt-copy h3 a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  overflow-wrap: anywhere;
+}
+.owned-prompt-copy p {
+  margin: 0;
+  color: #9aa6bb;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.owned-prompt-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
 .category-edit {
   flex: 1;
 }
@@ -667,12 +840,67 @@ select {
   cursor: not-allowed;
 }
 @media (max-width: 600px) {
+  .member-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .category-row {
     flex-direction: column;
     align-items: stretch;
   }
+  .owned-prompt {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 @media (max-width: 420px) {
+  .member-grid {
+    grid-template-columns: 1fr;
+  }
+  .profile-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .profile-details {
+    gap: 14px;
+  }
+  .owned-prompt-actions {
+    width: 100%;
+  }
+  .owned-prompt-actions > * {
+    flex: 1;
+  }
+  .member-page h1,
+  .profile-page h1 {
+    font-size: 26px;
+  }
+  .member-heading {
+    align-items: flex-start;
+    gap: 13px;
+  }
+  .member-mark-large {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+    font-size: 22px;
+  }
+  .nav-inner {
+    gap: 7px;
+    padding: 0 10px;
+  }
+  .nav-inner nav {
+    gap: 6px;
+  }
+  .nav-inner nav a {
+    display: flex;
+    align-items: center;
+  }
+  .brand {
+    gap: 7px;
+    font-size: 14px;
+  }
+  .nav-user {
+    gap: 4px;
+  }
   /* Very small phones: the Categories icon already shows the user is an admin. */
   .role-badge {
     display: none;

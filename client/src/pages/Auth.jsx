@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 export default function Auth({ mode }) {
@@ -33,10 +32,7 @@ export default function Auth({ mode }) {
     <main className="auth-wrap">
       <div className="auth-card">
         <div className="auth-brand">
-          <span className="brand-icon">
-            <Sparkles />
-          </span>
-          <span className="eyebrow">PROMPTVAULT</span>
+          <span className="brand-wordmark">PromptVault</span>
         </div>
         <h1>{isRegister ? "Create your account" : "Welcome back"}</h1>
         <p className="muted">
