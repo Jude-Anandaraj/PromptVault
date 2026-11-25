@@ -7,8 +7,6 @@ The API follows the MVC pattern:
 - **Controllers** hold the logic.
 - **Routes** expose the endpoints.
 
-The React app in `client/` is the view.
-
 ## Setup
 
 ```bash
@@ -30,7 +28,7 @@ Before the first start, fill in `MONGODB_URI` and `JWT_SECRET` in `.env` (see [E
 | `npm run seed:demo` | adds the categories, 4 demo accounts (one of them an admin) and 12 sample prompts (needs `DEMO_PASSWORD` in `.env`) |
 | `npm run make-admin -- someone@example.com` | makes an existing account an admin; add `--remove` to make it a member again |
 
-`npm run seed:demo` creates the members `alex.demo@example.com`, `priya.demo@example.com` and `sam.demo@example.com`, and the admin `admin.demo@example.com`, all using the password in `DEMO_PASSWORD`. It adds 3 sample prompts in each category. Running it again only adds what is missing. Keep `DEMO_PASSWORD` private: anyone who knows it can log in as the demo accounts on the live site.
+`npm run seed:demo` creates the members `alex.demo@example.com`, `priya.demo@example.com` and `sam.demo@example.com`, and the admin `admin.demo@example.com`, all using the password in `DEMO_PASSWORD`. It adds 3 sample prompts in each category. Running it again only adds what is missing. Keep `DEMO_PASSWORD` private: anyone who knows it can log in as the demo accounts.
 
 ## Request flow
 
@@ -43,7 +41,6 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 | Location | Contents |
 |---|---|
 | `server.js` | entry point when running locally: loads `.env`, checks the token settings, connects to MongoDB, then starts the server |
-| `functions/api.js` | entry point on Netlify: runs the same Express app as a Netlify Function |
 | `app.js` | Express app: CORS, JSON parsing, routes and error handling |
 | `config/env.js` | loads variables from `.env` |
 | `config/database.js` | MongoDB connection |
@@ -289,7 +286,7 @@ Settings are read from `server/.env`:
 |---|---|---|
 | `PORT` | port the API listens on | `3000` |
 | `MONGODB_URI` | MongoDB connection string | required |
-| `CLIENT_ORIGIN` | address of the React app, used for CORS | `http://localhost:5173` |
+| `CLIENT_ORIGIN` | address of a browser front end allowed to call the API (CORS); not needed for Postman | `http://localhost:5173` |
 | `JWT_SECRET` | secret used to sign login tokens; at least 32 random characters | required |
 | `JWT_EXPIRES_IN` | how long a login token stays valid, with a unit: `30m`, `2h`, `1d` | `2h` |
 | `DEMO_PASSWORD` | password for the demo accounts; only used by `npm run seed:demo` | none |
@@ -303,5 +300,3 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 Each developer uses their own secret in their own `.env`. Anyone who knows the secret can create valid tokens, so never commit it or share it.
 
 `.env.example` lists these variables without real credentials and is committed. `.env` holds the real values, stays on each developer's machine and is ignored by Git.
-
-On Netlify, the same variables are set in the site's **Environment variables** settings instead of `.env` (see the root README).

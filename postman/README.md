@@ -8,10 +8,20 @@
 2. In Postman, choose **Import**, then select `PromptVault.postman_collection.json`.
 3. Open the collection's **Variables** tab:
    - `adminPassword`: the `DEMO_PASSWORD` from `server/.env`. This logs in as `admin.demo@example.com`.
-   - `baseUrl`: leave as `http://localhost:3000/api`, or use `https://<your-site>.netlify.app/api` for the live site.
+   - `baseUrl`: leave as `http://localhost:3000/api`.
 4. Click **Run collection**, then **Run PromptVault API**.
 
 Each run registers two new test members, uses them, and deletes them again at the end, so it can be run as often as needed.
+
+## Running it from a terminal
+
+Newman, Postman's command-line runner, runs the same collection. With the API running, from the `PromptVault/` folder:
+
+```bash
+npx newman run postman/PromptVault.postman_collection.json --env-var adminPassword=<your DEMO_PASSWORD>
+```
+
+A full run ends with a summary table; every request and assertion should show 0 failed.
 
 ## What it covers
 

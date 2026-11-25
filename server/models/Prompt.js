@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// Platforms the first release accepts. The form can leave this out.
+// Platforms a prompt can be written for. A request can leave this out.
 export const PLATFORMS = ['General', 'Chat', 'Code', 'Image'];
 
 const promptSchema = new mongoose.Schema(
@@ -26,7 +26,7 @@ const promptSchema = new mongoose.Schema(
       minlength: [10, 'Prompt text must be 10 to 12000 characters.'],
       maxlength: [12000, 'Prompt text must be 10 to 12000 characters.']
     },
-    // Optional. The current form does not send it.
+    // Optional. Defaults to General when a request leaves it out.
     platform: {
       type: String,
       enum: PLATFORMS,

@@ -2,7 +2,7 @@
 
 Vadim Gubin. First release of the prompt database.
 
-This matches the React client that is already in the repo. Category values on the wire are names, not ids. The database still stores a category id and an author id.
+Category values on the wire are names, not ids. The database still stores a category id and an author id.
 
 ## Collections
 
@@ -54,7 +54,9 @@ Errors use `{ "error": "message" }`. Field problems also include `details`.
 | PUT | /api/categories/:id | an admin |
 | DELETE | /api/categories/:id | an admin |
 
-`GET /api/categories/admin` returns `{ "categories": [ { "_id", "name", "description", "promptCount" } ] }` for the admin page. POST and PUT take `{ "name", "description" }`. Names are 2–40 characters and unique, ignoring capitals (409 if taken). DELETE returns 409 while any prompt still uses the category.
+`PUT /api/prompts/:id` replaces the prompt's editable fields, so send `title`, `description`, `content` and `category` every time. `tags` and `platform` are optional.
+
+`GET /api/categories/admin` returns `{ "categories": [ { "_id", "name", "description", "promptCount" } ] }` for administrators. POST and PUT take `{ "name", "description" }`. Names are 2–40 characters and unique, ignoring capitals (409 if taken). DELETE returns 409 while any prompt still uses the category.
 
 `category=All` or an empty category means no category filter. `q` searches title, description, and tags. A search with no hits returns an empty list, not an error.
 

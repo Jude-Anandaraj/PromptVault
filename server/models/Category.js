@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-// A category is a label the Explore page can filter on.
-// The React app currently sends and receives the name as plain text.
+// A category is a label prompts can be filtered on.
+// The API sends and receives the name as plain text.
 const categorySchema = new mongoose.Schema(
   {
     name: {

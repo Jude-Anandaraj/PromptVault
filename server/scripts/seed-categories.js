@@ -2,7 +2,7 @@ import '../config/env.js';
 import { connectDB } from '../config/database.js';
 import Category from '../models/Category.js';
 
-// Ordinary starter labels for the Explore filters.
+// Starter categories that prompts can be filed under.
 // Safe to run more than once: existing names are left as they are.
 const STARTERS = [
   { name: 'Writing', description: 'Prompts for drafts, emails, and short explanations.' },

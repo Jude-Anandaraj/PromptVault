@@ -9,7 +9,7 @@ import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
-// Allow the React app to call this API from the browser.
+// Let a browser front end at CLIENT_ORIGIN call this API. Postman is not affected by CORS.
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173' }));
 
 // Read JSON request bodies into req.body.

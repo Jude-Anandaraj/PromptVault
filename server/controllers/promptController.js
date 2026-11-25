@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import Category from '../models/Category.js';
 import Prompt, { PLATFORMS } from '../models/Prompt.js';
 
-// Shape the current React pages already read:
+// Shape of a prompt in every API response:
 // category is a name, author has _id and name, the prompt keeps _id.
 function present(prompt) {
   const author = prompt.userId;

@@ -1,6 +1,10 @@
 # PromptVault
 
-PromptVault is a website for sharing AI prompts. People can publish, find, rate and organise prompts for tools like ChatGPT, Claude and Gemini. It is built with the MERN stack (MongoDB, Express, React, Node.js) for COMP229 – Web Application Development.
+PromptVault is a website for sharing AI prompts. People can publish, find and organise prompts for tools like ChatGPT, Claude and Gemini. This is the first release for COMP229 – Web Application Development (Project Part 1): the MongoDB database and the Express/Node.js backend, with CRUD, authentication and authorization APIs tested in Postman.
+
+**In this release:** a MongoDB database with `users`, `prompts` and `categories` collections; an Express REST API in MVC structure; full CRUD for users, prompts and categories; JWT authentication with owner and admin authorization; and a Postman collection that tests every endpoint (33 requests, 45 checks).
+
+**Not in this release:** the React web interface and online deployment. They are planned for later releases.
 
 ## Getting the code
 
@@ -13,43 +17,33 @@ cd PromptVault
 
 ```
 PromptVault/
-├── client/                 React front end (Vite)
-│   └── src/
-│       ├── components/     reusable UI: Navbar, PromptCard, PromptForm
-│       ├── context/        shared login state
-│       ├── pages/          one file per screen: Explore, Login, Register, …
-│       └── services/       calls to the Express API
 ├── server/                 Node.js + Express REST API (MVC)
 │   ├── config/             MongoDB connection
 │   ├── controllers/        request handlers
-│   ├── middleware/         authentication and error handling
+│   ├── middleware/         authentication, authorization and validation
 │   ├── models/             Mongoose schemas: User, Prompt, Category
 │   ├── routes/             URL-to-controller mapping
-│   ├── functions/          Netlify Function that runs the API online
-│   ├── scripts/            database seed script
+│   ├── scripts/            database seed and make-admin scripts
 │   └── utils/              shared helpers, e.g. login tokens
-├── docs/                   project documents and evidence
+├── docs/                   API contract
 ├── postman/                Postman collection for API tests
-├── netlify.toml            Netlify build and redirect settings
 ├── .gitignore
 ├── LICENSE
 └── README.md
 ```
 
-`client/`, `server/` and `docs/` each have their own README with more detail. Git does not track empty folders, so each empty folder holds a `.gitkeep` placeholder. Delete it once the folder has real files.
+`server/`, `docs/` and `postman/` each have their own README with more detail.
 
 ## Requirements
 
 | Tool | Version | Purpose |
 |---|---|---|
-| Node.js | 22 LTS or newer (includes npm) | runs the server and the React dev server |
+| Node.js | 22 LTS or newer (includes npm) | runs the server |
 | Git | any recent version | version control |
 | MongoDB | local Community Server or a MongoDB Atlas cluster | database |
 | Postman | any version | API testing |
 
 ## Running the project
-
-Run the server and the client in two separate terminals.
 
 **API: http://localhost:3000**
 
@@ -72,7 +66,7 @@ The first time you use a database, add the starting categories:
 npm run seed
 ```
 
-To also add 3 demo accounts and 12 sample prompts, set `DEMO_PASSWORD` in `server/.env` and run `npm run seed:demo` instead. The server README has the details.
+To also add 4 demo accounts (3 members and 1 admin) and 12 sample prompts, set `DEMO_PASSWORD` in `server/.env` and run `npm run seed:demo` instead. The server README has the details.
 
 Open http://localhost:3000/api/health to check that the API is running. It should return:
 
@@ -80,54 +74,29 @@ Open http://localhost:3000/api/health to check that the API is running. It shoul
 { "status": "ok", "database": "connected" }
 ```
 
-**React app: http://localhost:5173**
+## Testing the API
 
-```bash
-cd client
-npm install
-cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env
-npm run dev
-```
-
-Open http://localhost:5173 in a browser.
+`postman/PromptVault.postman_collection.json` tests every endpoint: 33 requests with 45 checks. Run `npm run seed:demo` first, import the collection into Postman, set its `adminPassword` variable to your `DEMO_PASSWORD`, then click **Run collection**. `postman/README.md` has the details, including how to run it from a terminal.
 
 ## Who can do what
 
 | | Visitor | Member | Admin |
 |---|---|---|---|
-| Browse, search and copy prompts | ✅ | ✅ | ✅ |
+| Browse, search and read prompts | ✅ | ✅ | ✅ |
 | Create prompts; edit and delete their own | | ✅ | ✅ |
-| Edit their account or delete it (Account page) | | ✅ | ✅ |
+| View, edit or delete their own account | | ✅ | ✅ |
 | Edit and delete **any** prompt | | | ✅ |
-| Add, rename and delete categories (Categories page) | | | ✅ |
+| Add, rename and delete categories | | | ✅ |
 
 Everyone who signs up is a member. To make an account an admin, run `npm run make-admin -- someone@example.com` in `server/`.
-
-## Deployment (Netlify)
-
-The site is deployed on Netlify from the `main` branch. Every push to `main` redeploys it. `netlify.toml` holds the settings:
-- **React app:** built into `client/dist` and served as static files.
-- **API:** the Express app runs as a Netlify Function (`server/functions/api.js`). Requests to `/api/*` are sent to it, so the app and the API share one address.
-
-Environment variables in the Netlify site settings (scope must include **Functions**):
-
-| Variable | Value |
-|---|---|
-| `MONGODB_URI` | MongoDB Atlas connection string |
-| `JWT_SECRET` | random string of at least 32 characters, different from any local one |
-| `JWT_EXPIRES_IN` | `2h` |
-
-Changes to these only apply after the next deploy (**Deploys → Trigger deploy**). MongoDB Atlas must allow connections from anywhere (`0.0.0.0/0`), because Netlify Functions have no fixed IP address. Run `npm run seed` once against the Atlas database so the categories exist.
-
-Check a deploy at `/api/health`. If the API fails, the errors are under **Logs → Functions → api** in Netlify.
 
 ## Team
 
 | Member | Role |
 |---|---|
 | Jude Anandaraj | Backend, Authentication & Integration |
-| Amitabh Bhattacharjee | React Frontend & User Experience |
-| Vadim Gubin | Prompt Database, CRUD API & Quality Assurance |
+| Amitabh Bhattacharjee | Frontend & User Experience |
+| Vadim Gubin | Database, CRUD API & Quality Assurance |
 
 ## Contributing
 
