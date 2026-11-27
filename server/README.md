@@ -55,7 +55,7 @@ route  →  middleware  →  controller  →  model  →  MongoDB
 | `models/Prompt.js` | Prompt schema: title, description, content, platform, tags, author and category ids, timestamps |
 | `models/Category.js` | Category schema: unique name, description |
 | `controllers/authController.js` | registration and login |
-| `controllers/userController.js` | the logged-in user's profile: view, update, delete |
+| `controllers/userController.js` | public member listing/details and the logged-in user's profile and prompts |
 | `controllers/promptController.js` | list, search, read, create, edit and delete prompts, with ownership checks |
 | `controllers/categoryController.js` | list category names; for admins, add, rename and delete categories |
 | `routes/authRoutes.js` | `/api/auth` routes |
@@ -79,7 +79,10 @@ To add a feature:
 | GET | `/api/health` | no | `200 { "status": "ok", "database": "connected" }`, or `503` if the database is disconnected |
 | POST | `/api/auth/register` | no | `201` with a login token and the new user |
 | POST | `/api/auth/login` | no | `200` with a login token and the user |
+| GET | `/api/users` | no | `200` with public member fields and prompt counts |
+| GET | `/api/users/:id` | no | `200` with public member fields and prompts; `400` for invalid id, `404` if missing |
 | GET | `/api/users/profile` | **yes** | `200` with the logged-in user |
+| GET | `/api/users/profile/prompts` | **yes** | `200` with only the logged-in user's prompts |
 | PUT | `/api/users/profile` | **yes** | `200` with the updated user |
 | DELETE | `/api/users/profile` | **yes** | `200`; deletes the account and its prompts |
 | GET | `/api/categories` | no | `200` with a list of category names |

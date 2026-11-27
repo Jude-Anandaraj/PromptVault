@@ -20,6 +20,12 @@ One prompt: `{ "prompt": { ... } }`
 
 Categories: `{ "categories": ["Coding", "Images", "Studying", "Writing"] }`
 
+Member directory: `{ "users": [{ "id", "name", "createdAt", "promptCount" }] }`
+
+Member detail: `{ "user": { "id", "name", "createdAt", "promptCount" }, "prompts": [ ... ] }`
+
+My prompts: `{ "prompts": [ ... ] }` (authenticated user's own prompts)
+
 A prompt object:
 
 ```json
@@ -43,6 +49,12 @@ Errors use `{ "error": "message" }`. Field problems also include `details`.
 
 | Method | Path | Who |
 | --- | --- | --- |
+| GET | /api/users | anyone; returns public member fields and prompt counts |
+| GET | /api/users/:id | anyone; returns public member fields and prompts |
+| GET | /api/users/profile | logged-in user; own profile only |
+| GET | /api/users/profile/prompts | logged-in user; own prompts only |
+| PUT | /api/users/profile | logged-in user; own profile only |
+| DELETE | /api/users/profile | logged-in user; own account only |
 | GET | /api/prompts?q=&category=&platform= | anyone |
 | GET | /api/prompts/:id | anyone |
 | GET | /api/categories | anyone |
