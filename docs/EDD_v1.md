@@ -1,9 +1,9 @@
 # PromptVault - Engineering Design Document (EDD) v1
 
-**Course:** COMP229 - Web Application Development  
-**Project:** PromptVault - AI Prompt Sharing Platform  
-**Prepared for:** Project team  
-**Version:** 1.0  
+**Course:** COMP229 - Web Application Development
+**Project:** PromptVault - AI Prompt Sharing Platform
+**Prepared for:** Project team
+**Version:** 1.0
 **Date:** November 27, 2026
 
 > This document describes the implementation visible in the project source and the current PR #9 summary. It distinguishes verified local checks from live integration that still requires a configured database.
